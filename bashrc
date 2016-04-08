@@ -58,7 +58,7 @@ elif test -f /usr/local/etc/bash_completion.d/git-completion.bash; then
 	source /usr/local/etc/bash_completion.d/git-prompt.sh
 fi
 
-# django bash completion 
+# django bash completion
 if test -f /$HOME/.django_bash_completion.sh; then
 	source $HOME/.django_bash_completion.sh
 fi
@@ -144,6 +144,12 @@ fi
 # export PATH=$PATH:$GOPATH/bin
 # export PATH="/Users/jwhitmarsh/Library/Android/sdk/platform-tools/":$PATH
 
+NPM_PACKAGES=/Users/sip/.npm-packages
+PATH="$NPM_PACKAGES/bin:$PATH"
+
+unset MANPATH
+export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
+
 LTS="$(n --lts)"
 CURRENT="$(node -v)"
 GREEN='\033[01;32m'
@@ -157,3 +163,68 @@ else
 	echo ""
     echo -e "   ${NONE}sudo n $LTS"
 fi
+
+eval "$(fasd --init auto)"
+
+export LAMP_DEPLOYMENT_KEY=~/.ssh/drg-euw1-cider-development.pem
+
+# Allows space to complete and expand !$ eg:
+# $ ls Projects
+# $ cd !$<space> # completes to `cd Projects`
+bind Space:magic-space
+
+## SMARTER TAB-COMPLETION (Readline bindings) ##
+
+# Perform file completion in a case insensitive fashion
+bind "set completion-ignore-case on"
+
+# Treat hyphens and underscores as equivalent
+bind "set completion-map-case on"
+
+# Display matches for ambiguous patterns at first tab press
+bind "set show-all-if-ambiguous on"
+
+## SANE HISTORY DEFAULTS ##
+
+# Append to the history file, don't overwrite it
+shopt -s histappend
+
+# Save multi-line commands as one command
+shopt -s cmdhist
+
+# Record each line as it gets issued
+PROMPT_COMMAND='history -a'
+
+# Huge history. Doesn't appear to slow things down, so why not?
+HISTSIZE=500000
+HISTFILESIZE=100000
+
+# Avoid duplicate entries
+HISTCONTROL="erasedups:ignoreboth"
+
+# Useful timestamp format
+HISTTIMEFORMAT='%F %T '
+
+## BETTER DIRECTORY NAVIGATION ##
+
+# Prepend cd to directory names automatically
+shopt -s autocd 2> /dev/null
+# Correct spelling errors during tab-completion
+shopt -s dirspell 2> /dev/null
+# Correct spelling errors in arguments supplied to cd
+shopt -s cdspell 2> /dev/null
+
+# This defines where cd looks for targets
+# Add the directories you want to have fast access to, separated by colon
+# Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
+CDPATH=".:~:~/src"
+
+# This is for git to use the latest version installed from brew
+export PATH=/usr/local/bin:$PATH
+
+# This is to add adb and android to the path
+export JAVA_HOME=/usr
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+
+export CIRCLE_TEST_REPORTS=/tmp/

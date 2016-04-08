@@ -53,3 +53,5 @@ function ggl()
 export GOPATH=$HOME/work
 export PATH=$GOPATH/bin:$PATH
 export PATH="/usr/local/sbin:$PATH"
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
