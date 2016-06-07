@@ -54,7 +54,20 @@ export GOPATH=$HOME/work
 export PATH=$GOPATH/bin:$PATH
 export PATH="/usr/local/sbin:$PATH"
 
+# iTerm2 shell integration
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+# iTerm2 tab titles
+function title {
+    if [ "$1" ]
+    then
+        export PROMPT_COMMAND='iterm2_preexec_invoke_cmd'
+        echo -ne "\033]0;${*}\007"
+    else
+        export PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/~}\007";iterm2_preexec_invoke_cmd'
+    fi
+}
+title
 
 # Setting PATH for Python 3.5
 # The orginal version is saved in .bash_profile.pysave
