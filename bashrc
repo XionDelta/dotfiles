@@ -63,43 +63,6 @@ if test -f /$HOME/.django_bash_completion.sh; then
 	source $HOME/.django_bash_completion.sh
 fi
 
-# best prompt ever!
-#
-function smile {
-	if test $? = 0; then
-		printf "${csi_green}:)"
-	else
-		printf "${csi_red}:("
-	fi
-}
-function user_colour {
-	if test "$UID" = 0; then
-		printf "${csi_red}"
-	else
-		printf "${csi_green}"
-	fi
-}
-#curl with username, url
-cgt(){
-	echo "curl -OLv --user '$1' $2"
-	curl -OLv --user $1 $2
-}
-# Git branch in prompt.
-parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-
-csi='\033['
-csi_default=${csi}0m
-csi_cyan=${csi}36m
-csi_green=${csi}32m
-csi_red=${csi}31m
-csi_gold=${csi}33m
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWUPSTREAM=verbose
-PS1="\n\$(smile) ${csi_cyan}\A $(user_colour)\u@\h ${csi_gold}\w${csi_default} \$(type -t __git_ps1 >/dev/null && __git_ps1 '(%s)')\n\\$ "
 
 HISTCONTROL=ignoreboth
 HISTSIZE=5000
@@ -120,7 +83,6 @@ function gvimcpp {
 function physize {
 	echo $(( $(stat -c '%B * %b' "$1") / 1024 )) "$1"
 }
-
 
 case $- in
 *i*)
@@ -228,3 +190,10 @@ export ANDROID_HOME=~/Library/Android/sdk
 export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
 
 export CIRCLE_TEST_REPORTS=/tmp/
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+eval "$(direnv hook bash)"
+
+# Only load Liquid Prompt in interactive shells, not from a script or from scp
+[[ $- = *i* ]] && source ~/src/liquidprompt/liquidprompt
