@@ -113,17 +113,24 @@ unset MANPATH
 export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 
 LTS="$(n --lts)"
+LATEST="$(n --latest)"
 CURRENT="$(node -v)"
 GREEN='\033[01;32m'
 RED='\033[01;31m'
 NONE='\033[00m'
+TODAY=$(date '+%y-%m-%d')
 
-if [ $LTS = ${CURRENT/v/} ]; then
-	echo -e "${GREEN}node is up to date with LTS: $LTS. go team!"
-else
-	echo -e "${RED}node is behind LTS. please update to $LTS"
-	echo ""
-    echo -e "   ${NONE}sudo n $LTS"
+if [ ! -f /tmp/${TODAY} ]; then
+	if [ $LATEST \< ${CURRENT/v/} ]; then
+		echo -e "${GREEN}node is up to date with LATEST: $LATEST. go team!"
+	else
+		echo -e "${RED}CURRENT: ${CURRENT/v/}"
+		echo -e "    LTS: $LTS"
+		echo -e " LATEST: $LATEST"
+		echo ""
+		echo -e "   ${NONE}sudo n latest"
+	fi
+	touch /tmp/${TODAY}
 fi
 
 eval "$(fasd --init auto)"
